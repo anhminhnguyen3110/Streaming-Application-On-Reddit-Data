@@ -3,6 +3,12 @@ from kafka import KafkaConsumer, KafkaProducer
 from kafka.admin import KafkaAdminClient, NewTopic
 from kafka.errors import TopicAlreadyExistsError
 
+retention_ms = 86400000
+
+topic_configs = {
+    "retention.ms": str(retention_ms)
+}
+
 class KafkaTopicManager:
     def __init__(self, subreddit_name):
         self.subreddit_name = subreddit_name
@@ -17,7 +23,7 @@ class KafkaTopicManager:
             print(f"Topic '{self.subreddit_name}' already exists.")
         else:
             try:
-                new_topic = NewTopic(name=self.subreddit_name, num_partitions=Setting.PARTITION_NUMBER_PER_TOPIC, replication_factor=Setting.REPLICA_FACTOR)
+                new_topic = NewTopic(name=self.subreddit_name, num_partitions=Setting.PARTITION_NUMBER_PER_TOPIC, replication_factor=Setting.REPLICA_FACTOR, topic_configs=topic_configs)
                 self.admin_client.create_topics([new_topic])
                 print(f"Topic '{self.subreddit_name}' created successfully.")
             except TopicAlreadyExistsError:
