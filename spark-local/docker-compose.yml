@@ -1,37 +1,42 @@
-version: "3.6"
-volumes:
-  shared-workspace:
-    name: "hadoop-distributed-file-system"
-    driver: local
+version: '3'
+
 services:
-  jupyterlab:
-    image: andreper/jupyterlab:3.0.0-spark-3.0.0
-    container_name: jupyterlab
-    ports:
-      - 8888:8888
-      - 4040:4040
-    volumes:
-      - shared-workspace:/opt/workspace
-    restart: always
-  spark-master:
-    image: andreper/spark-master:3.0.0
+  spark:
+    image: docker.io/bitnami/spark:3
     container_name: spark-master
-    ports:
-      - 8080:8080
-      - 7077:7077
-    volumes:
-      - shared-workspace:/opt/workspace
-    restart: always
-  spark-worker-1:
-    image: andreper/spark-worker:3.0.0
-    container_name: spark-worker-1
     environment:
-      - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_MEMORY=1G
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
     ports:
-      - 8081:8081
+      - '8080:8080'
+      - '4040:4040'
+      - '7077:7077'
     volumes:
-      - shared-workspace:/opt/workspace
-    depends_on:
-      - spark-master
-    restart: always
+      - ../streamingProje:/home
+      - /opt/spark/conf/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
+      - /opt/spark/jars:/opt/bitnami/spark/ivy:z
+
+  spark-worker:
+    image: docker.io/bitnami/spark:3
+    container_name: spark-worker
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_EXECUTOR_MEMORY=1G
+      - SPARK_WORKER_CORES=1
+    volumes:
+      - ./data:/data
+      - ./src:/src 
+    ports:
+      - '8081:8081'
+
+  jupyterlab:
+    container_name: jupyterlab
+    image: jupyter/all-spark-notebook:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work

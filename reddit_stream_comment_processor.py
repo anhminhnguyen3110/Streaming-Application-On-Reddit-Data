@@ -2,8 +2,8 @@ from kafka_producer import KafkaProducerAdapter
 from kafka_topic import KafkaTopicManager
 import praw
 import threading
-from json import dumps
 from config import Setting
+import time
 
 # Define the subreddit list
 subreddit_list = ['AskReddit']
@@ -29,14 +29,15 @@ class RedditProducer:
 
     def start_stream(self, subreddit_name):
         subreddit = self.reddit.subreddit(subreddit_name)
-        
-        topic_manager = KafkaTopicManager(subreddit_name)
-        topic_name = topic_manager.create_or_get_topic()        
+
+        topic_manager = KafkaTopicManager(f"Subreddit_Comments")
+        topic_name = topic_manager.create_or_get_topic()
         if topic_name is None:
             print("Topic creation or retrieval failed. Check Kafka broker connectivity.")
             return None
-        producer = KafkaProducerAdapter(topic=subreddit_name)
-        
+
+        producer = KafkaProducerAdapter(topic=topic_name)  # Use the created topic_name
+
         comment: praw.models.Comment
         for comment in subreddit.stream.comments(skip_existing=True):
             try:
@@ -51,14 +52,14 @@ class RedditProducer:
                     "over_18": comment.over_18,
                     "timestamp": comment.created_utc,
                     "permalink": comment.permalink,
-                    "link_id": comment.link_id,
                     "score": comment.score,
-                    "awards": comment.all_awardings,
                     "is_submitter": comment.is_submitter,
-                    "stickied": comment.stickied,
+                    "timestamp": int(comment.created_utc),
                 }
                 producer.send_message(comment_json)
-                print(f"After format subreddit: {subreddit_name}, comment: {comment_json}")
+                print(f"{subreddit_name}, comment_id: {comment_json['id']}, comment_author: {comment_json['author']}")
+                # Wait for 1 second before the next iteration
+                time.sleep(5)
             except Exception as e:
                 print("An error occurred:", str(e))
 
@@ -68,7 +69,7 @@ class RedditProducer:
             thread = threading.Thread(target=self.start_stream, args=(subreddit_name,))
             thread.start()
             threads.append(thread)
-        
+
         for thread in threads:
             thread.join()
 
