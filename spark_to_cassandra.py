@@ -74,6 +74,7 @@ def preprocessing(df):
     df = df.withColumn('body', regexp_replace('body', r'http\S+', ''))
     df = df.withColumn('body', regexp_replace('body', r'[^\x00-\x7F]+', ''))
     df = df.withColumn('body', regexp_replace('body', r'[\n\r]', ' '))
+    df = df.withColumn('body', regexp_replace('body', r'\n\n', ' '))
     df = df.withColumn('body', regexp_replace('body', '@\w+', ''))
     df = df.withColumn('body', regexp_replace('body', '#', ''))
     df = df.withColumn('body', regexp_replace('body', 'RT', ''))
@@ -88,12 +89,10 @@ output_df = parsed_df.select(
        col("comment_json.author").alias("author"),
        col("comment_json.body").alias("body"),
        col("comment_json.subreddit").alias("subreddit"),
-       col("comment_json.upvotes").alias("upvotes"),
-       col("comment_json.downvotes").alias("downvotes"),
+       col("comment_json.score").alias("upvotes"),
        col("comment_json.over_18").alias("over_18"),
        col("comment_json.timestamp").alias("timestamp"),
        col("comment_json.permalink").alias("permalink"),
-       col("comment_json.score").alias("score"),
     ) \
     .withColumn("uuid", make_uuid()) \
     .withColumn("api_timestamp", from_unixtime(col("timestamp").cast(FloatType()))) \
@@ -116,8 +115,6 @@ output_df.writeStream \
 summary_df = output_df.withWatermark("ingest_timestamp", "2 minutes").groupBy("subreddit") \
     .agg(
         avg("upvotes").alias("upvotes_avg"),
-        avg("downvotes").alias("downvotes_avg"),
-        avg("score").alias("score_avg"),
         avg("sentiment_score_compound").alias("sentiment_score_compound_avg"),
         avg("sentiment_score_polarity").alias("sentiment_score_polarity_avg"),
         avg("sentiment_score_subjectivity").alias("sentiment_score_subjectivity_avg")

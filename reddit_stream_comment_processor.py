@@ -47,14 +47,18 @@ class RedditProducer:
                     "author": comment.author.name,
                     "body": comment.body,
                     "subreddit": comment.subreddit.display_name,
-                    "upvotes": comment.ups,
-                    "downvotes": comment.downs,
                     "over_18": comment.over_18,
                     "timestamp": comment.created_utc,
                     "permalink": comment.permalink,
-                    "score": comment.score,
+                    "upvotes": comment.score,
                     "is_submitter": comment.is_submitter,
                     "timestamp": int(comment.created_utc),
+                    "created_utc": comment.created_utc,
+                    "distinguished": comment.distinguished,
+                    "edited": comment.edited,
+                    "parent_id": comment.parent_id,
+                    "saved": comment.saved,
+                    "stickied": comment.stickied,
                 }
                 producer.send_message(comment_json)
                 print(f"{subreddit_name}, comment_id: {comment_json['id']}, comment_author: {comment_json['author']}")

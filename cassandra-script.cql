@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS comments(
     body text,
     subreddit text,
     upvotes int,
-    downvotes int,
     over_18 boolean,
     permalink text,
     api_timestamp timestamp,
@@ -21,7 +20,6 @@ CREATE TABLE IF NOT EXISTS comments(
     sentiment_score_compound float,
     sentiment_score_polarity float,
     sentiment_score_subjectivity float,
-    score float,
     PRIMARY KEY((id), api_timestamp)
 )
 WITH CLUSTERING ORDER BY (api_timestamp DESC);
@@ -39,8 +37,6 @@ CREATE TABLE IF NOT EXISTS subreddit_sentiment_avg(
     sentiment_score_polarity_avg double,
     sentiment_score_subjectivity_avg double,
     upvotes_avg double,
-    downvotes_avg double,
-    score_avg double,
     ingest_timestamp timestamp,
     PRIMARY KEY((subreddit),ingest_timestamp))
 WITH CLUSTERING ORDER BY (ingest_timestamp DESC);
