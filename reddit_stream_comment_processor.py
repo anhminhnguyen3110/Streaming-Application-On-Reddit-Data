@@ -5,9 +5,7 @@ import threading
 from config import Setting
 import time
 
-# Define the subreddit list
 subreddit_list =  ['AskReddit', 'funny', 'gaming', 'aww', 'worldnews', 'india', 'usa', 'unitedkingdom', 'australia', 'russia', 'China']
-
 
 class RedditProducer:
 
@@ -30,8 +28,9 @@ class RedditProducer:
 
     def start_stream(self, subreddit_name):
         subreddit = self.reddit.subreddit(subreddit_name)
-
+        
         topic_manager = KafkaTopicManager(f"Subreddit_Comments_{subreddit_name}")
+        
         topic_name = topic_manager.create_or_get_topic()
         if topic_name is None:
             print("Topic creation or retrieval failed. Check Kafka broker connectivity.")
@@ -59,7 +58,7 @@ class RedditProducer:
                 }
                 producer.send_message(comment_json)
                 print(f"{subreddit_name}, comment_id: {comment_json['id']}, comment_author: {comment_json['author']}")
-                # Wait for 1 second before the next iteration
+                # Wait for 2 second before the next iteration
                 time.sleep(2)
             except Exception as e:
                 print("An error occurred:", str(e))
