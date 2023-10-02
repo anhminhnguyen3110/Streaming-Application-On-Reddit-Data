@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=minh123
+      - GF_SECURITY_ADMIN_USER=minh
+    command: >
+      sh -c "grafana-cli plugins install hadesarchitect-cassandra-datasource && /run.sh"
