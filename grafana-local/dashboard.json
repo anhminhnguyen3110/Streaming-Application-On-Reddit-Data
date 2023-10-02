@@ -1,0 +1,647 @@
+{
+	"annotations": {
+	  "list": [
+		{
+		  "builtIn": 1,
+		  "datasource": {
+			"type": "grafana",
+			"uid": "-- Grafana --"
+		  },
+		  "enable": true,
+		  "hide": true,
+		  "iconColor": "rgba(0, 211, 255, 1)",
+		  "name": "Annotations & Alerts",
+		  "type": "dashboard"
+		}
+	  ]
+	},
+	"editable": true,
+	"fiscalYearStartMonth": 0,
+	"graphTooltip": 0,
+	"id": 1,
+	"links": [],
+	"liveNow": false,
+	"panels": [
+	  {
+		"datasource": {
+		  "type": "hadesarchitect-cassandra-datasource",
+		  "uid": "f4090091-25de-440c-9534-35b26b2faae6"
+		},
+		"fieldConfig": {
+		  "defaults": {
+			"color": {
+			  "mode": "palette-classic"
+			},
+			"custom": {
+			  "axisCenteredZero": false,
+			  "axisColorMode": "series",
+			  "axisLabel": "Top subreddits",
+			  "axisPlacement": "auto",
+			  "barAlignment": 0,
+			  "drawStyle": "line",
+			  "fillOpacity": 0,
+			  "gradientMode": "none",
+			  "hideFrom": {
+				"legend": false,
+				"tooltip": false,
+				"viz": false
+			  },
+			  "insertNulls": false,
+			  "lineInterpolation": "smooth",
+			  "lineStyle": {
+				"fill": "solid"
+			  },
+			  "lineWidth": 1,
+			  "pointSize": 5,
+			  "scaleDistribution": {
+				"type": "linear"
+			  },
+			  "showPoints": "auto",
+			  "spanNulls": false,
+			  "stacking": {
+				"group": "A",
+				"mode": "none"
+			  },
+			  "thresholdsStyle": {
+				"mode": "off"
+			  }
+			},
+			"mappings": [],
+			"thresholds": {
+			  "mode": "absolute",
+			  "steps": [
+				{
+				  "color": "green",
+				  "value": null
+				},
+				{
+				  "color": "red",
+				  "value": 80
+				}
+			  ]
+			}
+		  },
+		  "overrides": []
+		},
+		"gridPos": {
+		  "h": 11,
+		  "w": 12,
+		  "x": 0,
+		  "y": 0
+		},
+		"id": 1,
+		"options": {
+		  "legend": {
+			"calcs": [
+			  "mean"
+			],
+			"displayMode": "list",
+			"placement": "bottom",
+			"showLegend": true
+		  },
+		  "tooltip": {
+			"mode": "multi",
+			"sort": "none"
+		  }
+		},
+		"targets": [
+		  {
+			"columnId": "subreddit",
+			"columnTime": "api_timestamp",
+			"columnValue": "upvotes",
+			"datasource": {
+			  "type": "hadesarchitect-cassandra-datasource",
+			  "uid": "Yc87Z6OJ4wsv"
+			},
+			"datasourceId": 1,
+			"keyspace": "reddit",
+			"queryType": "query",
+			"rawQuery": true,
+			"refId": "A",
+			"table": "subreddit_sentiment_avg",
+			"target": "select subreddit, CAST(sentiment_score_compound_avg AS double), ingest_timestamp from reddit.subreddit_sentiment_avg where subreddit IN ('AskReddit', 'funny', 'gaming', 'aww', 'worldnews') and ingest_timestamp>$__timeFrom and ingest_timestamp<$__timeTo ALLOW FILTERING;"
+		  }
+		],
+		"title": "Sentiment Score  NLTK Compound",
+		"type": "timeseries"
+	  },
+	  {
+		"datasource": {
+		  "type": "hadesarchitect-cassandra-datasource",
+		  "uid": "f4090091-25de-440c-9534-35b26b2faae6"
+		},
+		"description": "",
+		"fieldConfig": {
+		  "defaults": {
+			"color": {
+			  "mode": "palette-classic"
+			},
+			"custom": {
+			  "axisCenteredZero": false,
+			  "axisColorMode": "series",
+			  "axisLabel": "Countries",
+			  "axisPlacement": "auto",
+			  "barAlignment": 0,
+			  "drawStyle": "line",
+			  "fillOpacity": 0,
+			  "gradientMode": "none",
+			  "hideFrom": {
+				"legend": false,
+				"tooltip": false,
+				"viz": false
+			  },
+			  "insertNulls": false,
+			  "lineInterpolation": "linear",
+			  "lineWidth": 1,
+			  "pointSize": 5,
+			  "scaleDistribution": {
+				"type": "linear"
+			  },
+			  "showPoints": "auto",
+			  "spanNulls": false,
+			  "stacking": {
+				"group": "A",
+				"mode": "none"
+			  },
+			  "thresholdsStyle": {
+				"mode": "off"
+			  }
+			},
+			"mappings": [],
+			"thresholds": {
+			  "mode": "absolute",
+			  "steps": [
+				{
+				  "color": "green",
+				  "value": null
+				},
+				{
+				  "color": "red",
+				  "value": 80
+				}
+			  ]
+			}
+		  },
+		  "overrides": []
+		},
+		"gridPos": {
+		  "h": 11,
+		  "w": 12,
+		  "x": 12,
+		  "y": 0
+		},
+		"id": 2,
+		"options": {
+		  "legend": {
+			"calcs": [
+			  "mean"
+			],
+			"displayMode": "list",
+			"placement": "bottom",
+			"showLegend": true
+		  },
+		  "tooltip": {
+			"mode": "single",
+			"sort": "none"
+		  }
+		},
+		"targets": [
+		  {
+			"datasource": {
+			  "type": "hadesarchitect-cassandra-datasource",
+			  "uid": "Yc87Z6OJ4wsv"
+			},
+			"datasourceId": 1,
+			"queryType": "query",
+			"rawQuery": true,
+			"refId": "A",
+			"target": "select subreddit, CAST(sentiment_score_compound_avg AS double), ingest_timestamp from reddit.subreddit_sentiment_avg where subreddit IN ('india', 'usa', 'unitedkingdom', 'australia', 'russia', 'China') and ingest_timestamp>$__timeFrom and ingest_timestamp<$__timeTo;"
+		  }
+		],
+		"title": "Sentiment Score  NLTK Compound",
+		"type": "timeseries"
+	  },
+	  {
+		"datasource": {
+		  "type": "hadesarchitect-cassandra-datasource",
+		  "uid": "f4090091-25de-440c-9534-35b26b2faae6"
+		},
+		"fieldConfig": {
+		  "defaults": {
+			"color": {
+			  "mode": "palette-classic"
+			},
+			"custom": {
+			  "axisCenteredZero": false,
+			  "axisColorMode": "series",
+			  "axisLabel": "Top subreddits",
+			  "axisPlacement": "auto",
+			  "barAlignment": 0,
+			  "drawStyle": "line",
+			  "fillOpacity": 0,
+			  "gradientMode": "none",
+			  "hideFrom": {
+				"legend": false,
+				"tooltip": false,
+				"viz": false
+			  },
+			  "insertNulls": false,
+			  "lineInterpolation": "smooth",
+			  "lineStyle": {
+				"fill": "solid"
+			  },
+			  "lineWidth": 1,
+			  "pointSize": 5,
+			  "scaleDistribution": {
+				"type": "linear"
+			  },
+			  "showPoints": "auto",
+			  "spanNulls": false,
+			  "stacking": {
+				"group": "A",
+				"mode": "none"
+			  },
+			  "thresholdsStyle": {
+				"mode": "off"
+			  }
+			},
+			"mappings": [],
+			"thresholds": {
+			  "mode": "absolute",
+			  "steps": [
+				{
+				  "color": "green",
+				  "value": null
+				},
+				{
+				  "color": "red",
+				  "value": 80
+				}
+			  ]
+			}
+		  },
+		  "overrides": []
+		},
+		"gridPos": {
+		  "h": 11,
+		  "w": 12,
+		  "x": 0,
+		  "y": 11
+		},
+		"id": 6,
+		"options": {
+		  "legend": {
+			"calcs": [
+			  "mean"
+			],
+			"displayMode": "list",
+			"placement": "bottom",
+			"showLegend": true
+		  },
+		  "tooltip": {
+			"mode": "multi",
+			"sort": "none"
+		  }
+		},
+		"targets": [
+		  {
+			"columnId": "subreddit",
+			"columnTime": "api_timestamp",
+			"columnValue": "upvotes",
+			"datasource": {
+			  "type": "hadesarchitect-cassandra-datasource",
+			  "uid": "Yc87Z6OJ4wsv"
+			},
+			"datasourceId": 1,
+			"keyspace": "reddit",
+			"queryType": "query",
+			"rawQuery": true,
+			"refId": "A",
+			"table": "subreddit_sentiment_avg",
+			"target": "select subreddit, CAST(sentiment_score_polarity_avg AS double), ingest_timestamp from reddit.subreddit_sentiment_avg where subreddit IN ('AskReddit', 'funny', 'gaming', 'aww', 'worldnews') and ingest_timestamp>$__timeFrom and ingest_timestamp<$__timeTo ALLOW FILTERING;"
+		  }
+		],
+		"title": "Sentiment Score TextBlob Polarity",
+		"type": "timeseries"
+	  },
+	  {
+		"datasource": {
+		  "type": "hadesarchitect-cassandra-datasource",
+		  "uid": "f4090091-25de-440c-9534-35b26b2faae6"
+		},
+		"fieldConfig": {
+		  "defaults": {
+			"color": {
+			  "mode": "palette-classic"
+			},
+			"custom": {
+			  "axisCenteredZero": false,
+			  "axisColorMode": "series",
+			  "axisLabel": "Top subreddits",
+			  "axisPlacement": "auto",
+			  "barAlignment": 0,
+			  "drawStyle": "line",
+			  "fillOpacity": 0,
+			  "gradientMode": "none",
+			  "hideFrom": {
+				"legend": false,
+				"tooltip": false,
+				"viz": false
+			  },
+			  "insertNulls": false,
+			  "lineInterpolation": "smooth",
+			  "lineStyle": {
+				"fill": "solid"
+			  },
+			  "lineWidth": 1,
+			  "pointSize": 5,
+			  "scaleDistribution": {
+				"type": "linear"
+			  },
+			  "showPoints": "auto",
+			  "spanNulls": false,
+			  "stacking": {
+				"group": "A",
+				"mode": "none"
+			  },
+			  "thresholdsStyle": {
+				"mode": "off"
+			  }
+			},
+			"mappings": [],
+			"thresholds": {
+			  "mode": "absolute",
+			  "steps": [
+				{
+				  "color": "green",
+				  "value": null
+				},
+				{
+				  "color": "red",
+				  "value": 80
+				}
+			  ]
+			}
+		  },
+		  "overrides": []
+		},
+		"gridPos": {
+		  "h": 11,
+		  "w": 12,
+		  "x": 12,
+		  "y": 11
+		},
+		"id": 7,
+		"options": {
+		  "legend": {
+			"calcs": [
+			  "mean"
+			],
+			"displayMode": "list",
+			"placement": "bottom",
+			"showLegend": true
+		  },
+		  "tooltip": {
+			"mode": "multi",
+			"sort": "none"
+		  }
+		},
+		"targets": [
+		  {
+			"columnId": "subreddit",
+			"columnTime": "api_timestamp",
+			"columnValue": "upvotes",
+			"datasource": {
+			  "type": "hadesarchitect-cassandra-datasource",
+			  "uid": "Yc87Z6OJ4wsv"
+			},
+			"datasourceId": 1,
+			"keyspace": "reddit",
+			"queryType": "query",
+			"rawQuery": true,
+			"refId": "A",
+			"table": "subreddit_sentiment_avg",
+			"target": "select subreddit, CAST(sentiment_score_polarity_avg AS double), ingest_timestamp from reddit.subreddit_sentiment_avg where subreddit IN ('AskReddit', 'funny', 'gaming', 'aww', 'worldnews') and ingest_timestamp>$__timeFrom and ingest_timestamp<$__timeTo ALLOW FILTERING;"
+		  }
+		],
+		"title": "Sentiment Score TextBlob Polarity",
+		"type": "timeseries"
+	  },
+	  {
+		"datasource": {
+		  "type": "hadesarchitect-cassandra-datasource",
+		  "uid": "f4090091-25de-440c-9534-35b26b2faae6"
+		},
+		"description": "",
+		"fieldConfig": {
+		  "defaults": {
+			"color": {
+			  "mode": "palette-classic"
+			},
+			"custom": {
+			  "axisCenteredZero": false,
+			  "axisColorMode": "series",
+			  "axisLabel": "Countries",
+			  "axisPlacement": "auto",
+			  "barAlignment": 0,
+			  "drawStyle": "line",
+			  "fillOpacity": 0,
+			  "gradientMode": "none",
+			  "hideFrom": {
+				"legend": false,
+				"tooltip": false,
+				"viz": false
+			  },
+			  "insertNulls": false,
+			  "lineInterpolation": "linear",
+			  "lineWidth": 1,
+			  "pointSize": 5,
+			  "scaleDistribution": {
+				"type": "linear"
+			  },
+			  "showPoints": "auto",
+			  "spanNulls": false,
+			  "stacking": {
+				"group": "A",
+				"mode": "none"
+			  },
+			  "thresholdsStyle": {
+				"mode": "off"
+			  }
+			},
+			"mappings": [],
+			"thresholds": {
+			  "mode": "absolute",
+			  "steps": [
+				{
+				  "color": "green",
+				  "value": null
+				},
+				{
+				  "color": "red",
+				  "value": 80
+				}
+			  ]
+			}
+		  },
+		  "overrides": []
+		},
+		"gridPos": {
+		  "h": 11,
+		  "w": 12,
+		  "x": 0,
+		  "y": 22
+		},
+		"id": 3,
+		"options": {
+		  "legend": {
+			"calcs": [
+			  "mean"
+			],
+			"displayMode": "list",
+			"placement": "bottom",
+			"showLegend": true
+		  },
+		  "tooltip": {
+			"mode": "single",
+			"sort": "none"
+		  }
+		},
+		"targets": [
+		  {
+			"datasource": {
+			  "type": "hadesarchitect-cassandra-datasource",
+			  "uid": "Yc87Z6OJ4wsv"
+			},
+			"datasourceId": 1,
+			"queryType": "query",
+			"rawQuery": true,
+			"refId": "A",
+			"target": "select subreddit, CAST(sentiment_score_subjectivity_avg AS double), ingest_timestamp from reddit.subreddit_sentiment_avg where subreddit IN ('india', 'usa', 'unitedkingdom', 'australia', 'russia', 'China') and ingest_timestamp>$__timeFrom and ingest_timestamp<$__timeTo;"
+		  }
+		],
+		"title": "Sentiment Score Text Blob Subjectivity",
+		"type": "timeseries"
+	  },
+	  {
+		"datasource": {
+		  "type": "hadesarchitect-cassandra-datasource",
+		  "uid": "f4090091-25de-440c-9534-35b26b2faae6"
+		},
+		"fieldConfig": {
+		  "defaults": {
+			"color": {
+			  "mode": "palette-classic"
+			},
+			"custom": {
+			  "axisCenteredZero": false,
+			  "axisColorMode": "series",
+			  "axisLabel": "Top subreddits",
+			  "axisPlacement": "auto",
+			  "barAlignment": 0,
+			  "drawStyle": "line",
+			  "fillOpacity": 0,
+			  "gradientMode": "none",
+			  "hideFrom": {
+				"legend": false,
+				"tooltip": false,
+				"viz": false
+			  },
+			  "insertNulls": false,
+			  "lineInterpolation": "smooth",
+			  "lineStyle": {
+				"fill": "solid"
+			  },
+			  "lineWidth": 1,
+			  "pointSize": 5,
+			  "scaleDistribution": {
+				"type": "linear"
+			  },
+			  "showPoints": "auto",
+			  "spanNulls": false,
+			  "stacking": {
+				"group": "A",
+				"mode": "none"
+			  },
+			  "thresholdsStyle": {
+				"mode": "off"
+			  }
+			},
+			"mappings": [],
+			"thresholds": {
+			  "mode": "absolute",
+			  "steps": [
+				{
+				  "color": "green",
+				  "value": null
+				},
+				{
+				  "color": "red",
+				  "value": 80
+				}
+			  ]
+			}
+		  },
+		  "overrides": []
+		},
+		"gridPos": {
+		  "h": 11,
+		  "w": 12,
+		  "x": 12,
+		  "y": 22
+		},
+		"id": 8,
+		"options": {
+		  "legend": {
+			"calcs": [
+			  "mean"
+			],
+			"displayMode": "list",
+			"placement": "bottom",
+			"showLegend": true
+		  },
+		  "tooltip": {
+			"mode": "multi",
+			"sort": "none"
+		  }
+		},
+		"targets": [
+		  {
+			"columnId": "subreddit",
+			"columnTime": "api_timestamp",
+			"columnValue": "upvotes",
+			"datasource": {
+			  "type": "hadesarchitect-cassandra-datasource",
+			  "uid": "Yc87Z6OJ4wsv"
+			},
+			"datasourceId": 1,
+			"keyspace": "reddit",
+			"queryType": "query",
+			"rawQuery": true,
+			"refId": "A",
+			"table": "subreddit_sentiment_avg",
+			"target": "select subreddit, CAST(sentiment_score_subjectivity_avg AS double), ingest_timestamp from reddit.subreddit_sentiment_avg where subreddit IN ('AskReddit', 'funny', 'gaming', 'aww', 'worldnews') and ingest_timestamp>$__timeFrom and ingest_timestamp<$__timeTo ALLOW FILTERING;"
+		  }
+		],
+		"title": "Sentiment Score Text Blob Subjectivity",
+		"type": "timeseries"
+	  }
+	],
+	"refresh": "5s",
+	"schemaVersion": 38,
+	"style": "dark",
+	"tags": [],
+	"templating": {
+	  "list": []
+	},
+	"time": {
+	  "from": "now-6h",
+	  "to": "now"
+	},
+	"timepicker": {},
+	"timezone": "",
+	"title": "Subreddit sentiments",
+	"uid": "ee5399a3-330e-4108-9b56-0dd01d9270b2",
+	"version": 5,
+	"weekStart": ""
+}
