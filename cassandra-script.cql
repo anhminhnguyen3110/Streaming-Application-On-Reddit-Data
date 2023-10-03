@@ -1,43 +1,69 @@
+DROP KEYSPACE reddit;
 CREATE KEYSPACE IF NOT EXISTS reddit 
     WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
 USE reddit;
 
-DROP TABLE IF EXISTS reddit.comments;
-
-CREATE TABLE IF NOT EXISTS comments(
-    uuid uuid,
-    id text,
-    name text,
-    author text,
-    body text,
-    subreddit text,
-    upvotes int,
-    over_18 boolean,
-    permalink text,
-    api_timestamp timestamp,
-    ingest_timestamp timestamp,
-    sentiment_score_compound float,
-    sentiment_score_polarity float,
-    sentiment_score_subjectivity float,
-    PRIMARY KEY((id), api_timestamp)
+DROP TABLE IF EXISTS comments;
+CREATE TABLE IF NOT EXISTS comments (
+    uuid UUID,
+    id TEXT,
+    name TEXT,
+    author TEXT,
+    body TEXT,
+    subreddit TEXT,
+    upvotes INT,
+    over_18 BOOLEAN,
+    permalink TEXT,
+    api_timestamp TIMESTAMP,
+    ingest_timestamp TIMESTAMP,
+    sentiment_score_compound FLOAT,
+    sentiment_score_polarity FLOAT,
+    sentiment_score_subjectivity FLOAT,
+    PRIMARY KEY ((id), api_timestamp)
 )
 WITH CLUSTERING ORDER BY (api_timestamp DESC);
-
 CREATE INDEX IF NOT EXISTS ON comments (uuid);
 
-DESCRIBE reddit
-DESCRIBE reddit.comments;
-
-DROP TABLE IF EXISTS reddit.subreddit_sentiment_avg;
-CREATE TABLE IF NOT EXISTS subreddit_sentiment_avg(
-    uuid uuid,
-    subreddit text,
-    sentiment_score_compound_avg double,
-    sentiment_score_polarity_avg double,
-    sentiment_score_subjectivity_avg double,
-    upvotes_avg double,
-    ingest_timestamp timestamp,
-    PRIMARY KEY((subreddit),ingest_timestamp))
+DROP TABLE IF EXISTS subreddit_sentiment_avg;
+CREATE TABLE IF NOT EXISTS subreddit_sentiment_avg (
+    uuid UUID,
+    subreddit TEXT,
+    sentiment_score_compound_avg FLOAT,
+    sentiment_score_polarity_avg FLOAT,
+    sentiment_score_subjectivity_avg FLOAT,
+    upvotes_avg FLOAT,
+    ingest_timestamp TIMESTAMP,
+    PRIMARY KEY ((subreddit), ingest_timestamp)
+)
 WITH CLUSTERING ORDER BY (ingest_timestamp DESC);
- CREATE INDEX IF NOT EXISTS ON subreddit_sentiment_avg (uuid);
+CREATE INDEX IF NOT EXISTS ON subreddit_sentiment_avg (uuid);
+
+
+DROP TABLE IF EXISTS submissions;
+CREATE TABLE IF NOT EXISTS submissions (
+    uuid UUID,
+    id TEXT,
+    name TEXT,
+    author TEXT,
+    title TEXT,
+    subreddit TEXT,
+    submission_url TEXT,
+    upvotes INT,
+    upvote_ratio FLOAT,
+    permalink TEXT,
+    num_comments INT,
+    api_timestamp TIMESTAMP,
+    ingest_timestamp TIMESTAMP,
+    sentiment_score_compound FLOAT,
+    sentiment_score_polarity FLOAT,
+    sentiment_score_subjectivity FLOAT,
+    sentiment_score_compound_of_comments FLOAT,
+    sentiment_score_polarity_of_comments FLOAT,
+    sentiment_score_subjectivity_of_comments FLOAT,
+    negative_comment_rate FLOAT,
+    comments TEXT,
+    PRIMARY KEY ((id), api_timestamp)
+)
+WITH CLUSTERING ORDER BY (api_timestamp DESC);
+CREATE INDEX IF NOT EXISTS ON submissions (uuid);
