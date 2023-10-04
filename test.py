@@ -1,7 +1,7 @@
 from cassandra.cluster import Cluster
 
 # Define the Cassandra host address
-host = "35.201.0.188"
+host = "35.244.104.22"
 
 # Create a Cluster object and connect to Cassandra
 cluster = Cluster([host])

@@ -54,31 +54,3 @@ df.writeStream \
   .start() \
       
 spark.streams.awaitAnyTermination()
-  
-# # Select the fields from the struct
-# df = df.select(
-#     col("comment_json.id").alias("id"),
-#     col("comment_json.name").alias("name"),
-#     col("comment_json.author").alias("author"),
-#     col("comment_json.body").alias("body"),
-#     col("comment_json.subreddit").alias("subreddit"),
-#     col("comment_json.upvotes").alias("upvotes"),
-#     col("comment_json.downvotes").alias("downvotes"),
-#     col("comment_json.over_18").alias("over_18"),
-#     col("comment_json.timestamp").alias("timestamp"),
-#     col("comment_json.permalink").alias("permalink"),
-#     col("comment_json.score").alias("score"),
-#     col("comment_json.is_submitter").alias("is_submitter")
-# )
-
-
-
-# # Write the resulting DataFrame to the console with the custom trigger
-# query = df.writeStream \
-#     .format("console") \
-#     .outputMode("append") \
-#     .option("numRows", 1000) \
-#     .trigger(processingTime='5 seconds') \
-#     .start()
-
-# query.awaitTermination()
