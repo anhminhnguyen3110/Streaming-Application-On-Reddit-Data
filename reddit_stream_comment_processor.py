@@ -5,13 +5,26 @@ import threading
 from config import Setting
 import time
 
-subreddit_list =  ['AskReddit', 'funny', 'gaming', 'aww', 'worldnews', 'india', 'usa', 'unitedkingdom', 'australia', 'russia', 'China']
+subreddit_list = [
+    "AskReddit",
+    "funny",
+    "gaming",
+    "aww",
+    "worldnews",
+    "india",
+    "usa",
+    "unitedkingdom",
+    "australia",
+    "russia",
+    "China",
+]
+
 
 class RedditProducer:
-
     def __init__(self):
         # Initialize the Reddit client
         self.reddit = self.__get_reddit_client__()
+
     def __get_reddit_client__(self):
         try:
             reddit = praw.Reddit(
@@ -28,12 +41,14 @@ class RedditProducer:
 
     def start_stream(self, subreddit_name):
         subreddit = self.reddit.subreddit(subreddit_name)
-        
+
         topic_manager = KafkaTopicManager(f"Subreddit_Comments_{subreddit_name}")
-        
+
         topic_name = topic_manager.create_or_get_topic()
         if topic_name is None:
-            print("Topic creation or retrieval failed. Check Kafka broker connectivity.")
+            print(
+                "Topic creation or retrieval failed. Check Kafka broker connectivity."
+            )
             return None
 
         producer = KafkaProducerAdapter(topic=topic_name)  # Use the created topic_name
@@ -61,9 +76,11 @@ class RedditProducer:
                     "stickied": comment.stickied,
                 }
                 producer.send_message(comment_json)
-                print(f"{subreddit_name}, comment_id: {comment_json['id']}, comment_author: {comment_json['author']}")
+                print(
+                    f"{subreddit_name}, comment_id: {comment_json['id']}, comment_author: {comment_json['author']}"
+                )
                 # Wait for 2 second before the next iteration
-                time.sleep(2)
+                time.sleep(10)
             except Exception as e:
                 print("An error occurred:", str(e))
 
@@ -76,6 +93,7 @@ class RedditProducer:
 
         for thread in threads:
             thread.join()
+
 
 if __name__ == "__main__":
     reddit_producer = RedditProducer()

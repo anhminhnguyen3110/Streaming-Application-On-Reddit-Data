@@ -14,7 +14,9 @@ keyspace = "reddit"
 session.set_keyspace(keyspace)
 
 # Fetch and print all tables in the keyspace
-tables = session.execute("SELECT table_name FROM system_schema.tables WHERE keyspace_name = %s", (keyspace,))
+tables = session.execute(
+    "SELECT table_name FROM system_schema.tables WHERE keyspace_name = %s", (keyspace,)
+)
 for row in tables:
     print(row.table_name)
 
