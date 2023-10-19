@@ -4,24 +4,26 @@ import praw
 import threading
 from config import Setting
 import time
+
 # Define the subreddit list
-subreddit_list = ['AskReddit']
+subreddit_list = ["AskReddit"]
+
 
 def preprocess(text: str):
     clean_text = demoji.replace(text, "")
-    if(clean_text != text):
+    if clean_text != text:
         print("Emoji found in text:", text)
-    
+
     # Remove URLs
     clean_text = re.sub(r"'\w+|\$[\d\.]+|http\s+'", "", clean_text)
     return clean_text
-    
+
 
 class RedditProducer:
-
     def __init__(self):
         # Initialize the Reddit client
         self.reddit = self.__get_reddit_client__()
+
     def __get_reddit_client__(self):
         try:
             reddit = praw.Reddit(
@@ -39,15 +41,21 @@ class RedditProducer:
     def start_stream(self, subreddit_name):
         subreddit = self.reddit.subreddit(subreddit_name)
 
-        topic_submission_manager = KafkaTopicManager(f"Subreddit_Submissions_{subreddit_name}")
+        topic_submission_manager = KafkaTopicManager(
+            f"Subreddit_Submissions_{subreddit_name}"
+        )
         topic_submission_name = topic_submission_manager.create_or_get_topic()
 
         if topic_submission_name is None:
-            print("Topic creation or retrieval failed. Check Kafka broker connectivity.")
+            print(
+                "Topic creation or retrieval failed. Check Kafka broker connectivity."
+            )
             return None
 
-        submission_producer = KafkaProducerAdapter(topic=topic_submission_name)  # Use the created topic_submission_name
-        
+        submission_producer = KafkaProducerAdapter(
+            topic=topic_submission_name
+        )  # Use the created topic_submission_name
+
         submission: praw.models.Submission
         for submission in subreddit.stream.submissions():
             try:
@@ -66,9 +74,9 @@ class RedditProducer:
                     "num_reports": submission.num_reports,
                     "num_duplicates": submission.num_duplicates,
                     "insertion_timestamp": int(time.time()),
-                 }
+                }
                 comment_list = []
-                if(submission.num_comments > 0):
+                if submission.num_comments > 0:
                     for comment in submission.comments:
                         comment_json = {
                             "id": comment.id,
@@ -81,10 +89,12 @@ class RedditProducer:
                             "insertion_timestamp": int(time.time()),
                             "submission_id": submission.id,
                         }
-                        comment_list.append(comment_json['body'])
+                        comment_list.append(comment_json["body"])
                 submission_json["comments"] = comment_list
                 submission_producer.send_message(submission_json)
-                print(f"{subreddit_name}, submission_id: {submission_json['id']}, submission_author: {submission_json['author']} with timestamp: {submission_json['timestamp']}")
+                print(
+                    f"{subreddit_name}, submission_id: {submission_json['id']}, submission_author: {submission_json['author']} with timestamp: {submission_json['timestamp']}"
+                )
                 time.sleep(25)
             except Exception as e:
                 print("An error occurred:", str(e))
@@ -98,6 +108,7 @@ class RedditProducer:
 
         for thread in threads:
             thread.join()
+
 
 if __name__ == "__main__":
     reddit_producer = RedditProducer()
