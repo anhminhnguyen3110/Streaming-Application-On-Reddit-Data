@@ -73,20 +73,6 @@ parsed_df = df.withColumn(
     from_json(df["value"].cast("string"), submission_schema)
 )
 
-def preprocessing(df, column):
-    df = df.filter(col(column).isNotNull())
-    df = df.withColumn(column, regexp_replace(column, r'http\S+', ''))
-    df = df.withColumn(column, regexp_replace(column, r'[^\x00-\x7F]+', ''))
-    df = df.withColumn(column, regexp_replace(column, r'[\n\r]', ' '))
-    df = df.withColumn(column, regexp_replace(column, r'\n\n', ' '))
-    df = df.withColumn(column, regexp_replace(column, '@\w+', ''))
-    df = df.withColumn(column, regexp_replace(column, '#', ''))
-    df = df.withColumn(column, regexp_replace(column, 'RT', ''))
-    df = df.withColumn(column, regexp_replace(column, ':', ''))
-    df = df.withColumn(column, regexp_replace(column, '<a href="' , ''))
-    
-    return df
-
 def preprocess_text(text):
     text = re.sub(r'http\S+', '', text)
     text = re.sub(r'[^\x00-\x7F]+', '', text)
@@ -97,7 +83,10 @@ def preprocess_text(text):
     text = re.sub(r'RT', '', text)
     text = re.sub(r':', '', text)
     text = re.sub(r'<a href="' , '', text)
-    text = re.sub(r'  ', ' ', text)
+    text = re.sub(r'(\n)+', ' ', text)
+    text = re.sub(r'(\t)+', ' ', text)
+    text = re.sub(r'[^\w\s@#$%^*()<>/|}{~:]', ' ', text)
+    text = re.sub(r'( )+', ' ', text)
     text = demoji.replace(text, '')
     return text
 

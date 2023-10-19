@@ -7,8 +7,43 @@ import demoji
 import re
 from nltk.sentiment import SentimentIntensityAnalyzer
 from textblob import TextBlob
-nltk.download('vader_lexicon')
+import requests
+from nltk.corpus import stopwords
 
+nltk.download('vader_lexicon')
+nltk.download('stopwords')
+
+KAFKA_BOOTSTRAP_SERVERS = "host.docker.internal:29092"
+KAFKA_TOPIC = "Subreddit_Comments"
+API_URL = "https://api-inference.huggingface.co/models/minh21/XLNet-Reddit-Toxic-Comment-Classification"
+headers = {"Authorization": "Bearer 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"}
+stop_words = set(stopwords.words('english'))
+
+def query(payload):
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload)
+    except Exception as e:
+        return None
+    return response.json()
+
+def classify_comment(text):
+    # text = text = ' '.join([word for word in text.split() if word.lower() not in stop_words])
+    # output = query({"inputs": text})
+    output = None
+    
+    if(output is None):
+        return False
+    try:
+        max_score_label = max(output[0], key=lambda x: x['score'])
+        
+        if max_score_label['label'] == 'LABEL_1':
+            return True
+        else:
+            return False
+    except Exception as e:
+        return False
+
+classify_comment_spark_udf = udf(classify_comment, BooleanType())
 
 def make_uuid():
     return udf(lambda: str(uuid.uuid1()), StringType())()
@@ -52,8 +87,6 @@ comment_schema = StructType([
     StructField("permalink", StringType(), nullable=True),
 ])
 
-KAFKA_BOOTSTRAP_SERVERS = "host.docker.internal:29092"
-KAFKA_TOPIC = "Subreddit_Comments"
 
 df = spark.readStream.format("kafka") \
     .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVERS) \
@@ -79,7 +112,10 @@ def preprocess_text(text):
     text = re.sub(r'RT', '', text)
     text = re.sub(r':', '', text)
     text = re.sub(r'<a href="' , '', text)
-    text = re.sub(r'  ', ' ', text)
+    text = re.sub(r'(\n)+', ' ', text)
+    text = re.sub(r'(\t)+', ' ', text)
+    text = re.sub(r'[^\w\s@#$%^*()<>/|}{~:]', ' ', text)
+    text = re.sub(r'( )+', ' ', text)
     text = demoji.replace(text, '')
     return text
 
@@ -103,13 +139,17 @@ output_df = parsed_df.select(
     .withColumn("sentiment_score_compound", sentiment_udf(col("body"))) \
     .withColumn("sentiment_score_polarity", polarity_detection_udf(col("body"))) \
     .withColumn("sentiment_score_subjectivity", subjectivity_detection_udf(col("body"))) \
+    .withColumn("is_toxic", classify_comment_spark_udf(col("body"))) \
     .drop("timestamp")
 
 KAFKA_NEGATIVE_COMMENTS_TOPIC = "Negative_Comments"
+KAFKA_TOXIC_COMMENTS_TOPIC = "Toxic_Comments"
 
 def send_to_kafka_and_cassandra(current_df, epoch_id):
     threshold = 0.0  # Adjust the threshold as needed
     negative_comments = current_df.filter(col("sentiment_score_compound") < threshold)
+    toxic_comments = current_df.filter(col("is_toxic") == True)
+
     if not negative_comments.isEmpty():
         negative_comments.selectExpr(
             "CAST(uuid AS STRING) AS key",
@@ -120,6 +160,19 @@ def send_to_kafka_and_cassandra(current_df, epoch_id):
         .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVERS) \
         .option("topic", KAFKA_NEGATIVE_COMMENTS_TOPIC) \
         .option("checkpointLocation", "/tmp/check_point/negative_comments/") \
+        .mode("append") \
+        .save()
+    
+    if not toxic_comments.isEmpty():
+        toxic_comments.selectExpr(
+            "CAST(uuid AS STRING) AS key",
+            "to_json(struct(*)) AS value"
+        ) \
+        .write \
+        .format("kafka") \
+        .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVERS) \
+        .option("topic", KAFKA_TOXIC_COMMENTS_TOPIC)  \
+        .option("checkpointLocation", "/tmp/check_point/toxic_comments/") \
         .mode("append") \
         .save()
     

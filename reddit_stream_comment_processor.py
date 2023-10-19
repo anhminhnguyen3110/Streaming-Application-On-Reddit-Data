@@ -63,7 +63,7 @@ class RedditProducer:
                 producer.send_message(comment_json)
                 print(f"{subreddit_name}, comment_id: {comment_json['id']}, comment_author: {comment_json['author']}")
                 # Wait for 2 second before the next iteration
-                time.sleep(2)
+                time.sleep(10)
             except Exception as e:
                 print("An error occurred:", str(e))
 

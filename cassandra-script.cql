@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS comments (
     sentiment_score_compound FLOAT,
     sentiment_score_polarity FLOAT,
     sentiment_score_subjectivity FLOAT,
+    is_toxic BOOLEAN, 
     PRIMARY KEY ((id), api_timestamp)
 )
 WITH CLUSTERING ORDER BY (api_timestamp DESC);

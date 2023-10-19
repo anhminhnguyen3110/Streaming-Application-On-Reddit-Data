@@ -41,7 +41,7 @@ def process_kafka_messages():
     file_name = f'negative_reddit_{str(int(time.time()))}.xls'
     excel_file = os.path.join(output_dir, file_name)
     workbook = xlwt.Workbook()
-    if submissions_data or comments_data:
+    if submissions_data :
         submissions_sheet = workbook.add_sheet('Submissions')
         
         headers = list(submissions_data[0].keys())
