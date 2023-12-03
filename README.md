@@ -1,4 +1,4 @@
-![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/8367f147-692c-49cd-bee0-d98813b9569f)# Real-time Sentiment Analysis and Toxic Comment Classification
+# Real-time Sentiment Analysis and Toxic Comment Classification
 
 This dynamic project harnesses the power of Apache Kafka and Apache Spark to conduct real-time sentiment analysis and classify toxic comments within streaming data. Seamlessly integrating data from the Reddit API, the system leverages Kafka for real-time streaming and Spark for near real-time analysis. Employing advanced Natural Language Processing (NLP) techniques, it determines sentiment and classifies comments, providing a robust solution to combat online toxicity.
 
