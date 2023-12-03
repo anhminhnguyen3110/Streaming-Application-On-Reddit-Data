@@ -1,4 +1,4 @@
-# Real-time Sentiment Analysis and Toxic Comment Classification
+![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/8367f147-692c-49cd-bee0-d98813b9569f)# Real-time Sentiment Analysis and Toxic Comment Classification
 
 This dynamic project harnesses the power of Apache Kafka and Apache Spark to conduct real-time sentiment analysis and classify toxic comments within streaming data. Seamlessly integrating data from the Reddit API, the system leverages Kafka for real-time streaming and Spark for near real-time analysis. Employing advanced Natural Language Processing (NLP) techniques, it determines sentiment and classifies comments, providing a robust solution to combat online toxicity.
 
@@ -59,9 +59,12 @@ Deploys Cassandra for durable data storage and Grafana for compelling data visua
 
 ## Architecture Diagrams
 
-- [Data Pipeline Architecture](![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/8f8e4b1f-7471-4fb9-af2d-ef8023626e36))
-- [Kafka Infrastructure](![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/7a2888a7-f5af-4fb6-a5d8-978ab0047669))
-- [Spark Infrastructure](![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/b54d532a-10cc-422b-b83a-1168df95dc60))
+- Data pipeline architecture diagram
+  ![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/99298c25-d4fc-4e83-a458-43a1b2b8bdf0)
+- Kafka infrastructure diagram
+  ![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/39264dcc-d4e2-4291-ae29-a2f014a86c64)
+- Spark infrastructure diagram 
+  ![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/6ef64208-3304-4a76-955d-a5366e6d945b)
 
 ## Challenges and Future Enhancements
 
