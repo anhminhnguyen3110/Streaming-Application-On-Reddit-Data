@@ -1,9 +1,78 @@
-# COS80023-Big-Data-HD-project
-This is the HD project for unit called COS80023 Big Data at swinburne university, the topic is about Spark Streaming and Machine Learning to consume the data from Spark Streaming
+![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/8367f147-692c-49cd-bee0-d98813b9569f)# Real-time Sentiment Analysis and Toxic Comment Classification
 
+This dynamic project harnesses the power of Apache Kafka and Apache Spark to conduct real-time sentiment analysis and classify toxic comments within streaming data. Seamlessly integrating data from the Reddit API, the system leverages Kafka for real-time streaming and Spark for near real-time analysis. Employing advanced Natural Language Processing (NLP) techniques, it determines sentiment and classifies comments, providing a robust solution to combat online toxicity.
 
-# Install dependencies
-pip install -r requirements.txt
+## Features
 
+- **Data Source:** Utilizes the Reddit API for seamless streaming data ingestion.
+- **Architecture:** Implements a resilient architecture, utilizing Kafka for streaming and Spark for analysis.
+- **Sentiment Analysis:** Applies NLP techniques such as VADER and TextBlob for accurate sentiment analysis.
+- **Toxic Comment Classification:** Employs a cutting-edge toxic comment classification model based on the XLNet architecture.
+- **Data Visualization:** Utilizes Grafana for real-time monitoring and insightful historical data analysis.
 
-kafka-local/docker-compose -f single-zk-and-single-kafka.yml up -d
+## Architecture
+
+### 1. Data Source
+
+Efficiently collects streaming data from the Reddit API using the "prawn" library.
+
+### 2. Kafka
+
+Utilizes Kafka as a distributed and fault-tolerant stream processing platform, implementing a robust Kafka setup on Docker with brokers and Zookeeper.
+
+**Kafka Components:**
+- **Broker:** Manages storage and distribution of data.
+- **Topic:** Organizes data streams logically for efficient publishing and consumption.
+- **Producer:** Publishes data to Kafka topics.
+- **Consumer and Consumer Group:** Extracts data from Kafka topics, facilitating parallel processing.
+
+### 3. Spark Streaming
+
+Leverages Spark Streaming for near real-time data processing, overcoming challenges related to Spark setup, dependencies, and interactive sessions.
+
+**Spark Components:**
+- **Spark Master:** Manages the Spark application.
+- **Spark Worker:** Executes tasks directed by the Spark Master.
+- **Spark Session:** Initiates data processing and analysis.
+- **Structured Spark Stream:** Processes batches of messages from Kafka topics.
+
+### 4. Toxic Comment Classification Model
+
+Trains a sophisticated toxic comment classification model based on the XLNet architecture.
+
+**Model Components:**
+- **Tokenization:** Utilizes the XLNet-based model through the Hugging Face Transformers library.
+- **Pretrained Model:** Selects XLNet-Base-Case for superior performance in sentiment and text classification tasks.
+- **Data Preparation:** Cleans and preprocesses data for efficient model training.
+- **Result:** Achieves an impressive accuracy rate of around 91%.
+
+### 5. Cassandra and Grafana
+
+Deploys Cassandra for durable data storage and Grafana for compelling data visualization, offering valuable insights into system performance.
+
+**Cassandra:**
+- **Data storage:** Provides scalable and fault-tolerant storage for sentiment analysis and toxic comment results.
+
+**Grafana:**
+- **Dashboards:** Customized dashboards facilitate real-time monitoring and historical data analysis.
+- **Alerting:** Supports alerting for specific data conditions.
+
+## Architecture Diagrams
+
+- [Data Pipeline Architecture](![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/8f8e4b1f-7471-4fb9-af2d-ef8023626e36))
+- [Kafka Infrastructure](![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/7a2888a7-f5af-4fb6-a5d8-978ab0047669))
+- [Spark Infrastructure](![image](https://github.com/emyeucanha5/Spark-Streaming-with-Sentiment-Analysis-and-Toxic-Comment-classification/assets/57170354/b54d532a-10cc-422b-b83a-1168df95dc60))
+
+## Challenges and Future Enhancements
+
+- **Challenges Faced:**
+  - Successfully addressed hurdles in setting up Spark and Kafka, resolving issues related to dependencies and configurations.
+
+- **Recommendations for Future Enhancements:**
+  - Proposes enhancements in the toxicity model's handling of double-negative cases.
+  - Suggests exploring cloud deployment on services like GCP or AWS for enhanced scalability.
+  - Considers investigating alternative data visualization tools for more comprehensive business representation.
+
+## Conclusion
+
+This project pioneers a groundbreaking solution for real-time sentiment analysis and toxic comment classification, contributing significantly to the creation of safer online spaces. Despite initial challenges, the system adeptly processes streaming data, adapts to language trends, and emerges as a valuable tool for real-time data analysis.
